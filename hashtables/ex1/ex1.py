@@ -14,13 +14,15 @@ def get_indices_of_item_weights(weights, length, limit):
     for j in ht.storage:
         if j:
             try:
-                if j.key != limit-j.key and ht.storage[limit-j.key]:
-                    return (max(j.value,ht.storage[limit-j.key].value),min(j.value,ht.storage[limit-j.key].value))
+                if j.key != limit-j.key and ht.storage[limit-j.key] and j.value > ht.storage[limit-j.key].value:
+                    return (j.value,ht.storage[limit-j.key].value)
             except:
                 pass        
             if j.next:
                 if j.next.key + j.key == limit:
-                    return (max(j.value,j.next.value),min(j.value,j.next.value))
+                    if j.value > j.next.value:
+                        return (j.value,j.next.value)
+                    return (j.next.value,j.value)    
     return None
 
 def print_answer(answer):
