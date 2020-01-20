@@ -10,7 +10,7 @@ from timeit import default_timer as timer
 import random
 
 
-def proof_of_work(last_proof):
+def proof_of_work(last_proof,last_hash):
     """
     Multi-Ouroboros of Work Algorithm
     - Find a number p' such that the last six digits of hash(p) are equal
@@ -25,8 +25,8 @@ def proof_of_work(last_proof):
     print("Searching for next proof")
     proof = 0
     #  TODO: Your code here
-    last = f"{last_proof}".encode()
-    last_hash = hashlib.sha256(last).hexdigest()
+    # last = f"{last_proof}".encode()
+    # last_hash = hashlib.sha256(last).hexdigest()
 
     # block_string = json.dumps(last_proof)
     # block_string = last_proof
@@ -82,9 +82,13 @@ if __name__ == '__main__':
     # Run forever until interrupted
     while True:
         # Get the last proof from the server
+        r = requests.get(url=node + "/full_chain")
+        data = r.json()
+        previous_hash = data['chain'][-1]['previous_hash']
+        proof = data['chain'][-1]['proof']
         r = requests.get(url=node + "/last_proof")
         data = r.json()
-        new_proof = proof_of_work(data.get('proof'))
+        new_proof = proof_of_work(data.get('proof'),previous_hash)
 
         post_data = {"proof": new_proof,
                      "id": id}
@@ -97,3 +101,4 @@ if __name__ == '__main__':
             break
         else:
             print(data.get('message'))
+            print('proof',proof,'new_proof',new_proof,'previous_hash',previous_hash)
