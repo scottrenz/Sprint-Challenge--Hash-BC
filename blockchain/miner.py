@@ -26,7 +26,7 @@ def proof_of_work(last_proof):
     proof = 0
     #  TODO: Your code here
     while True:
-        vp_bool, new_hash = valid_proof(last_proof, proof)
+        vp_bool = valid_proof(last_proof, proof)
         if vp_bool:
             break
         proof += 1
@@ -48,7 +48,7 @@ def valid_proof(last_hash, proof):
     last_hash = hashlib.sha256(f'{last_hash}'.encode()).hexdigest()
     guess_hash = hashlib.sha256(f'{proof}'.encode()).hexdigest()
 
-    return guess_hash[:6] == last_hash[-6:],guess_hash
+    return guess_hash[:6] == last_hash[-6:]
 
 
 if __name__ == '__main__':
@@ -84,6 +84,7 @@ if __name__ == '__main__':
         if data.get('message') == 'New Block Forged':
             coins_mined += 1
             print("Total coins mined: " + str(coins_mined))
-            break
+            if coins_mined > 100:
+                break
         else:
             print(data.get('message'))
