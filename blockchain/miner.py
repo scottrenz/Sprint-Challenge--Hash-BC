@@ -30,7 +30,7 @@ def proof_of_work(last_proof):
 
     # block_string = json.dumps(last_proof)
     # block_string = last_proof
-    proof = 0
+    proof = last_proof
     while valid_proof(last_hash, proof) is False:
         proof += 1
     # return proof
