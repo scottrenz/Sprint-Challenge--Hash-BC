@@ -1,6 +1,6 @@
 import hashlib
 import requests
-
+import json
 import sys
 
 from uuid import uuid4
@@ -25,8 +25,17 @@ def proof_of_work(last_proof):
     print("Searching for next proof")
     proof = 0
     #  TODO: Your code here
+    last = f"{last_proof}".encode()
+    last_hash = hashlib.sha256(last).hexdigest()
 
-    print("Proof found: " + str(proof) + " in " + str(timer() - start))
+    # block_string = json.dumps(last_proof)
+    # block_string = last_proof
+    proof = 0
+    while valid_proof(last_hash, proof) is False:
+        proof += 1
+    # return proof
+
+    print("Proof found: " + str(proof) + " " + str(last_proof) + " in " + str(timer() - start))
     return proof
 
 
@@ -40,7 +49,16 @@ def valid_proof(last_hash, proof):
     """
 
     # TODO: Your code here!
-    pass
+    guess = f"{last_hash}{proof}".encode()
+    guess_hash = hashlib.sha256(guess).hexdigest()
+
+    # print('guess_hash',guess_hash)
+    # print('guess',guess)
+    # print('last_hash',last_hash)
+    # print('proof',proof)
+
+    # print(' hash 6 is ',guess_hash[:6],last_hash[-6:])
+    return guess_hash[:6] == last_hash[-6:]
 
 
 if __name__ == '__main__':
@@ -76,5 +94,6 @@ if __name__ == '__main__':
         if data.get('message') == 'New Block Forged':
             coins_mined += 1
             print("Total coins mined: " + str(coins_mined))
+            break
         else:
             print(data.get('message'))
