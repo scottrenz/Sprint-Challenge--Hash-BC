@@ -3,6 +3,7 @@
 # '''
 # Linked List hash table key/value pair
 # '''
+
 class LinkedPair:
     def __init__(self, key, value):
         self.key = key
@@ -34,12 +35,13 @@ def hash(x, max):
 # Hint: Used the LL handle collisions
 # '''
 def hash_table_insert(hash_table, key, value):
-    index = hash(key, len(hash_table.storage))
+    # index = hash(key, len(hash_table.storage))
+    index = key
 
     current_pair = hash_table.storage[index]
     last_pair = None
 
-    while current_pair is not None and current_pair.key != key:
+    while current_pair is not None: # and current_pair.key != key:
         last_pair = current_pair
         current_pair = last_pair.next
 
